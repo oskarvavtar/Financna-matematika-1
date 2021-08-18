@@ -1,0 +1,553 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+
+\usepackage{amsthm}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{relsize}
+\usepackage{marvosym}
+\usepackage{listings}
+\lstset{
+	basicstyle=\ttfamily,
+	mathescape
+}
+
+\DeclareMathOperator{\dist}{dist}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\F}{\mathcal{F}}
+
+\theoremstyle{definition}
+\newtheorem{definicija}{Definicija}[section]
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}[section]
+
+\newtheorem{lema}{Lema}[section]
+\newtheorem{vrednost}{Vrednost}
+\newtheorem{trditev}{Trditev}[section]
+\newtheorem{izrek}{Izrek}[section]
+
+
+\title{Finančna matematika 1 - definicije, trditve in izreki}
+\author{Oskar Vavtar \\
+po predavanjih profesorja Janeza Bernika}
+\date{2020/21}
+
+\begin{document}
+\maketitle
+\pagebreak
+\tableofcontents
+\pagebreak
+
+% #################################################################################################
+
+\section{FINANČNI INŠTRUMENTI}
+\vspace{0.5cm}
+
+\begin{definicija}[Obresti]
+
+Naj bo $T$ \textit{časovni horizont} in $R$ \textit{obrestna mera}.
+
+\begin{itemize}
+
+	\item Navadne obresti: 
+	\begin{itemize}
+		\item Obrestovalni faktor:
+		$$A(0, T) ~=~ 1 + RT$$
+		\item Diskontni faktor:
+		$$D(0, T) ~=~ \frac{1}{1 + RT}$$
+	\end{itemize}
+	
+	\item Diskretno obrestovanje (kapitalizacija)
+	$$A(0, 1) ~=~ \left( 1 + \frac{R_k}{k} \right)^k$$
+	
+	\item Zvezno obrestovanje: 
+	$$A(0, 1) ~=~ \lim_{k \rightarrow \infty} \left( 1 + \frac{R_k}{k} \right)^k ~=~ e^{Y \cdot 1}$$	
+	
+	\item Efektivna obrestna mera:
+	\begin{itemize}
+		\item Diskretno obrestovanje:
+		$$Re ~=~ \left( 1 + \frac{R_k}{k} \right)^k - 1$$
+		\item Zvezno obrestovanje:
+		$$Re ~=~ e^y - 1$$
+	\end{itemize}
+	
+
+\end{itemize}
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{vrednost}[Kuponska obveznica]
+
+$$P ~=~ \sum_{i=1}^{n-1} C_i \cdot D(0, t_i) + (C_n + N) D(0, t)$$
+
+\end{vrednost}
+\vspace{0.5cm}
+
+\begin{vrednost}[Donos do dospetje (Yield to maturity)]
+
+$$P ~=~ \sum_{i=1}^{n-1} \frac{C_i}{(1+y)^i} + \frac{C_n + N}{(1+y)^n}$$
+
+\end{vrednost}
+\vspace{0.5cm}
+
+\begin{definicija}[Časovna struktura obrestnih mer]
+
+\begin{align*}
+D(0, t) ~&=~ \frac{1}{1 + L(0, t) \cdot t} \\
+D(0, t) ~&=~ e^{-Y_t \cdot t}
+\end{align*}
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Forward rate agreement]
+
+Dogovor danes (v času $0$) o obrestni meri za obdobje $(t_1, t_2)$, $0 < t_1 < t_2$, z diskontnimi faktorji
+$$D(0, t_2) ~=~ D(0, t_1) \cdot D(0, t_1, t_2)$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Terminski posel]
+
+Dogovorimo se v času $0$ o ceni finančnega inštrumenta v času $t>0$ (FRA je terminski posel za nekuponske obveznice). Terminska cena (Forward price):
+$$F(t_1) ~=~ \frac{S_0}{D(0, t_1)}$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{vrednost}[Convenience yield]
+
+$$F_T ~=~ \frac{S_0 \cdot D_{dollar}(0, T)}{D_{euro}(0, T)} ~=~ S_0 \cdot e^{-\left( Y_{euro}^{(t)} - Y_{dollar}^{(t)} \right) \cdot t}$$
+
+\end{vrednost}
+\vspace{0.5cm}
+
+\begin{definicija}[Opcija]
+
+\begin{itemize}
+	
+	\item Nakupna opcija:
+	$$C_T ~=~ (S_T - K)^+ ~=~ \max{\{ S_T - K, 0 \}}$$
+	
+	\item Prodajna opcija:
+	$$P_T ~=~ (K - S_T)^+ ~=~ \max{\{ K - S_T, 0 \}}$$
+	
+\end{itemize}
+
+Tržne cene ameriških opcij:
+\begin{align*}
+c_t ~&\geq~ C_t \\
+p_t ~&\geq~ P_t
+\end{align*}
+
+Časovna vrednost opcije:
+\begin{align*}
+&c_t - C_t \\
+&p_t - C_t
+\end{align*}
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+$$\max{\{ S_t - D(t, T) \cdot K, 0\}} ~\leq~ c_t^e ~\leq~ c_t^a ~\leq~ S_t$$
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Če ni dividend na osnovno premoženje  a $[t, T]$, je
+$$p_t^e + S_t ~=~ c_t^e + K \cdot D(t, T)$$
+Za ameriške opcije velja:
+$$c_t^a + D(t, T) \cdot K ~\leq~ p_t^a + S_t ~\leq~ c_t^a + K$$
+po predpostavki, da do $T$ ni dividend. Velja le, če $D(t, T)<1$ in je $D(t, S)$, $0 \leq S \leq T$, padajoča funkcija. 
+
+\end{trditev}
+\vspace{0.5cm}
+
+\pagebreak
+
+% #################################################################################################
+
+\section{ENODOBNI MODEL TRGA}
+\vspace{0.5cm}
+
+\begin{definicija}[Matrika izplačil]
+
+$K \times N$ matrika, $i$-ti stolpec je vektor izplačil v času $t_1$ za $A_i$
+$$M ~=~ \begin{bmatrix}
+S_1(\omega_1) & \cdots & S_i(\omega_1) & \cdots & S_N(\omega_1) \\
+\vdots & ~ & ~ & ~ & \vdots \\
+S_1(\omega_k) & \cdots & S_i(\omega_k) & \cdots & S_N(\omega_k)
+\end{bmatrix}$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Vrednostni papir $A_i$:
+\begin{itemize}
+
+	\item Netvegan, če je $S_i(\omega_j) = S_i(\omega_l)$ $\forall j,l = 1, \ldots, K$. Izplačilo je konstantno, ne glede na stanje ekonomije v času $t_1$
+	\item Tvegan, če obstajata stanji $\omega_j$ in $\omega_l$, da je $S_i(\omega_j) \neq S_i(\omega_l)$
+
+\end{itemize}
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{vrednost}
+\vspace{0.5cm}
+~\\
+\begin{itemize}
+
+	\item V času $t_0$:
+	$$V_0 ~=~ \sum_{i=1}^N c_i \cdot \vartheta_i ~=~ \langle c, \vartheta \rangle$$
+	
+	\item V času $t_1$ (slučajna spremenljivka):
+	$$V_1 ~=~ \sum_{i=1}^N \vartheta \cdot S_i ~=~ M \cdot \vartheta ~=~ \begin{bmatrix}
+	V_1(\omega_1) \\
+	\vdots \\
+	V_1(\omega_k)
+	\end{bmatrix}$$
+
+\end{itemize}
+
+\end{vrednost}
+\vspace{0.5cm}
+
+\begin{definicija}[Arbitražni portfelj]
+
+Portfelj $\vartheta$ je \textit{arbitražni}, če je $V_0(\vartheta) \leq 0$ in je $V_1(\vartheta)$ pozitiven vektor, ki ima vsaj eno komponentno strogo pozitivno.\\
+
+\noindent Na trgu ne obstaja arbitražna priložnost, če ne obstaja arbitražni portfelj.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Pogojna terjatev]
+
+Pogojna terjatev je slučajna spremenljivka $X: \Omega \rightarrow \R$, ki jo lahko podamo z vektorjem $\begin{bmatrix}
+X(\omega_1) \\
+\vdots \\
+X(\omega_k)
+\end{bmatrix}$ \\
+
+\noindent Če obstaja portfelj $\vartheta$ tak, da je
+$$X ~=~ V_0(\vartheta) ~~~\text{oz.}~~~ X(\omega_j) ~=~ V_1(\vartheta)(\omega_j) ~\forall j$$
+je $X$ \textit{dosegljiva} pogojna terjatev. V tem primeru je $\vartheta$ \textit{izvedbeni} portfelj.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Popoln model trga]
+
+Trg, ki zadošča našim predpostavkam (ni trenj, vsi enako informirani,\ldots) in v katerem ne obstaja arbitražni portfelj, imenujemo \textit{popoln model trga}. 
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Zakon ene cene]
+
+Na našem modela velja \textit{zakon ene cene}, če za dva izvedbena portfelja $\vartheta_1, \vartheta_2$ za pogojno terjatev $X$ nujno velja
+$$V_0(\vartheta_1) ~=~ V_0(\vartheta_2).$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Trg je \textit{popoln}. $\Longrightarrow$ Velja \textit{zakon ene cene}.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Trg je \textit{poln}, če je vsaka pogojna terjatev dosegljiva.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Cenovni funkcional]
+
+Denimo, da na našem modelu trga velja \textit{zakon ene cene}. potem lahko definiramo linearni funkcional \hbox{$R_0: \M \rightarrow \R$}, s predpisom 
+$$\Pi_o(x) ~=~ V_0(\vartheta),$$
+kjer je $\vartheta$ izvedbeni portfelj za $X$.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\pagebreak
+
+\begin{trditev}
+
+Za dani model trga (vse predpostavke razen popolnosti) so ekvivalentne naslednje trditve:
+\begin{itemize}
+
+	\item Ne obstaja arbitražni portfelj (popoln trg).
+	
+	\item Za vsak portfelj $\vartheta$ tak, da je $V_1(\vartheta) \geq 0$ in $V_i(\vartheta) \neq 0$ je $V_0(\vartheta) > 0$.
+	
+	\item Ne obstaja pozitivna dosegljiva pogojna terjatev $X$ z izvedbenim portfeljem $\vartheta$, da je $V_0(\vartheta) = 0$.
+	
+	\item Cenovni funkcional $\Pi$ je krepko pozitiven.
+
+\end{itemize}
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{definicija}[Numerar]
+
+\textit{Numerar} je tak vrednostni papir $A_i$, da je $S_i(\omega_j) > 0$, $\forall j = 1,\ldots, K$. \\
+
+\noindent Definiramo:
+\begin{itemize}
+	
+	\item Relativne cene:
+	$$\tilde{C}_k ~=~ \frac{C_k}{C_i}$$
+	
+	\item Relativne donose:
+	$$\tilde{S}_k(\omega_j) ~=~ \frac{S_k(\omega_j)}{S_i(\omega_j)}$$
+	
+\end{itemize} 
+
+\noindent Vrednost portfelja:
+\begin{align*}
+\tilde{V}_0(\vartheta) ~&=~ \langle \tilde{C}, \vartheta \rangle \\
+\tilde{V}_1(\vartheta) ~&=~ \langle \tilde{S}, \vartheta \rangle
+\end{align*} \\
+
+\noindent $(\tilde{V}_0(\vartheta), \tilde{V}_1(\vartheta))$ je \textit{diskontirani} vrednostni proces za $\vartheta$ glede na $A_i$.
+
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Martingal]
+
+Diskontirani vrednostni proces $(\tilde{V}_0(\vartheta), \tilde{V}_1(\vartheta))$ je \textit{martingal} glede na neko verjetnost $Q$ na $\Omega$, če velja
+$$\E_Q(\tilde{V}_1(\vartheta)) ~=~ \tilde{V}_0(\vartheta).$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{izrek}[1. osnovni izrek vrednotenja premoženja]
+
+Naj bo dan enodobni model trga (z vsemi predpostavkami razen neobstoja arbitraže). $A_1$ naj bo \textit{numerar}. Potem je trg brez arbitraže (popoln) natanko tedaj, ko na $\Omega$ obstaja ekvivalentna verjetnost $Q$ taka, da je diskontiran osnovni proces za vsak $A_i$, $1 \leq i \leq N$, \textit{martingal} glede na $Q$.
+$$\tilde{C}_i ~=~ \E_Q(\tilde{S}_i), ~i = 1,\ldots, N ~~~\Longrightarrow~~~ \tilde{V}_0(\vartheta) ~=~ \tilde{V}_1(\vartheta) ~\forall \vartheta.$$
+
+\end{izrek}
+\vspace{0.5cm}
+
+\begin{izrek}[2. osnovni izrek vrednotenja premoženja]
+
+Če je trg \textit{popoln}, torej za dan $A_1$ obstaja ekvivalentna martingalska verjetnost $Q$, je ta enolična natanko tedaj, ko je trg \textit{poln}.
+
+\end{izrek}
+\vspace{0.5cm}
+
+\pagebreak
+
+% #################################################################################################
+
+\section{VEČOBDOBNI MODEL TRGA}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Če je $\F_0$ generirana z atomi (najmanjša neprazna množica, ki je še v $\F_t$) $A_1^t,\ldots, A_{k_t}^t$, je $\F_t$ \textit{merljiva} natanko tedaj, ko je konstantna na vsakem od atomov $A_j^t$, $1 \leq j \leq k_t$. ($\F_t$ merljiva $\iff$ poznana v času $t$)
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Zaporedje $V = (V_0, V_1,\ldots, V_T)$ je \textit{prilagojen proces} filtraciji $(\F_0, \F_1,\ldots, \F_T)$, če je $V_t$ \textit{merljiva} glede na $\F_t$, za $0 \leq t \leq T$. V posebnem primeru, ker je $\F_0 = \{\emptyset, \Omega\}$, je potem $V_0$ konstantna.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Proces $(V_0,\ldots, V_T)$ je \textit{napovedljiv}, če je $V_t$ merljiva glede na $\F_{t-1}$, $t=1,\ldots, T$, $V_0$ pa konstantna. To pomeni: če je proces \textit{napovedljiv}, vem v času $t-1$, kaj bo v času $t$.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Za vsak dinamični portfelj imamo:
+\begin{itemize}
+
+	\item Likvidacijsko vrednost v času $t$:
+	$$V_t^L(\vartheta) ~=~ \sum_{j=1}^N \vartheta_t^j \cdot S_t^j ~~~(V_t^L)_{t=0}^S ~\text{je prilagojen}$$
+	
+	\item Nabavno vrednost v času $t$:
+	$$V_t^A(\vartheta) ~=~ \sum_{j=1}^N \vartheta_{t+1}^j \cdot S_t^j ~~~(V_t^A)_{t=1}^{N-1} ~\text{je prilagojen}$$
+
+\end{itemize}
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{definicija}[Strategija samofinanciranje]
+
+\textit{Strategija samofinanciranja} je taka trgovalna strategija $(\vartheta_1, \ldots, \vartheta_S)$, $S \leq T$, za katero je 
+$$V_t^L(\vartheta) ~=~ V_t^A(\vartheta), ~~~ 1 \leq t \leq S-1.$$
+To pomeni, da v vmesnem času od $0$ do $S$ ni vmesnih denarnih tokov, ne pozitivnih, ne negativnih. Tedaj govorimo kar o $(V_t(\vartheta))_{t=0}^T$ kot vrednostnem procesu strategije samofinanciranja.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Atom za $\F_k$ je najmanjša podmnožica $\Omega$, za katero lahko v času $k$ povemo, ali se je zgodila ali ne.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Če imamo dano filtracijo $\F_0 \subseteq \F_1 \subseteq \ldots \subseteq \F_T$ je $(X_i)_{i=0}^T$ \textit{prilagojen} tej filtraciji, če je $X_i$ $\F_i$-merljiva, $\forall i \in \{0,\ldots, T\}$ (torej je $X_i$ konstantna na atomih, ki generirajo $\F_i$). $(S_i)_{i=0}^T$ je \textit{prilagojen} $\forall j = 1,\ldots, K$.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+$(Y_i)_{i=0}^T$ je \textit{predvidljiv}, če je $Y_i$ $\F_i$-merljiv za $\forall i > 1$ in $Y_0$ konstantna.
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}
+~\\
+\textit{Zakon ene cene} velja za dospelost $T$ $\iff$ velja za vse dospelosti $1 \leq S \leq T$.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{definicija}[Arbitražni portfelj]
+
+Strategija samofinanciranja $\vartheta$ z dospelostjo $S$ je \textit{arbitražna strategija}, če 
+$$V_0^A(\vartheta) = V_0(\vartheta) \leq 0, ~~~V_i(\vartheta) \geq 0, ~1 \leq i \leq S ~~~\text{in}~~~ V_S(\vartheta) \neq 0.$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Ne obstaja arbitražna strategija z dospelostjo $T$ $\iff$ ne obstaja za dospelost $S$, $1 \leq S \leq T$.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Trg je \textit{popoln} $\Longrightarrow$ velja \textit{zakon ene cene}.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{izrek}
+
+Na trgu ni arbitraže (z dospelostjo $S$) $\iff$ $\Pi_S$ strogo (\hbox{$X_S \in \M_S$}, $X_S \geq 0$ in $X_S \neq 0 ~\Rightarrow~ \Pi_S(X_S) > 0$). 
+
+$$\Pi_S: \M_S \rightarrow \R, ~~~\Pi_S(X_S) ~=~ V_0(\vartheta); ~~~\vartheta ~\text{izvedbena strategija za}~ X_S.$$
+
+\end{izrek}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Trg je \textit{poln} za dospelost $T$ $\iff$ poln je za vse ostale dospelosti.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{izrek}
+
+Denimo, da velja \textit{zakon ene cene}. Potem na trgu ni arbitraže $\iff$ cenovni funkcional $\Pi_S$ ima krepko pozitivno rešitev $\tilde{\Pi}_S$ na $\mathcal{L}_S(\Omega)$ (ni enolična, če trg ni \textit{poln}).
+
+\end{izrek}
+\vspace{0.5cm}
+
+\begin{definicija}[Martingal]
+
+Filtriran verjetnostni prostor. Prilagojen proces $(X_i)_{i=1}^T$ je \textit{martingal} glede na $\F_i$ in $P$, če je 
+$$X_i ~=~ \E(X_{i+1} \mid \F_i), ~~~i = 0, \ldots, T-1 ~~~(\F_0 \subseteq \ldots \subseteq \F_t).$$ 
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}[Stolpna lastnost]
+
+$\F_i \subseteq \F_j$:
+$$\E(\E(X_T \mid \F_j) \mid \F_i) ~=~ \E(X_T \mid \F_i)$$
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{definicija}[Submartingal]
+
+Prilagojen proces $(X_i)_{i=1}^T$ je \textit{podmartingal (submartingal)}, če velja
+$$X_i ~\leq~ \E(X_{i+1} \mid \F_i), ~~~i=0, \ldots, T-1.$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Supermartingal]
+
+Prilagojen proces $(X_i)_{i=1}^T$ je \textit{nadmartingal (supermartingal)}, če velja
+$$X_i ~\geq~ \E(X_{i+1} \mid \F_i), ~~~i=0, \ldots, T-1.$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}[Doobova dekompozicija]
+
+Naj bo $(X_n)_{n=0}^T$ prilagojen proces glede na $(\F_n)_{n=0}^T$. Potem obstaja martingal $(M_n)_{n=0}^T$ in predvidljiv proces $(A_n)_{n=0}^T$, taka da je
+$$X_n ~=~ M_n + A_n, ~~~m = 0, \ldots, T.$$
+Če zahtevamo še $A_0 = 0$, potem je ta dekompozicija enolična.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+$Q$ je ekvivalentna martingalska verjetnost $\iff$ diskontirani vrednostni procesi samofinancirajočih strategij so martingali.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{izrek}[1. osnovni izrek vrednotenja premoženja]
+
+Obstoj ekvivalentne martingalske verjetnosti pri vsakem numerarju je ekvivalenten pogoju, da je trg brez arbitraže.
+
+\end{izrek}
+\vspace{0.5cm}
+
+\begin{izrek}[2. osnovni izrek vrednotenja premoženja]
+
+Če je trg popoln (torej ne obstaja arbitraža), potem je pri izbranem numerarju ekvivalentna martingalska verjetnost ena sama natanko tedaj, ko je trg poln.
+
+\end{izrek}
+\vspace{0.5cm}
+
+\pagebreak
+
+% #################################################################################################
+
+\end{document}
