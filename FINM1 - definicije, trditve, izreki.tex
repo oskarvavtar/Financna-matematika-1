@@ -5,12 +5,13 @@
 \usepackage{amsthm}
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{relsize}
-\usepackage{marvosym}
+\usepackage{marvosym} % \EUR
 \usepackage{listings}
 \lstset{
 	basicstyle=\ttfamily,
 	mathescape
 }
+\usepackage{bbm} % indikatorska
 
 \DeclareMathOperator{\dist}{dist}
 \newcommand{\R}{\mathbb{R}}
@@ -19,6 +20,7 @@
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\M}{\mathcal{M}}
 \newcommand{\F}{\mathcal{F}}
+\newcommand{\1}{\mathbbm{1}}
 
 \theoremstyle{definition}
 \newtheorem{definicija}{Definicija}[section]
@@ -73,7 +75,7 @@ Naj bo $T$ \textit{časovni horizont} in $R$ \textit{obrestna mera}.
 		\item Diskretno obrestovanje:
 		$$Re ~=~ \left( 1 + \frac{R_k}{k} \right)^k - 1$$
 		\item Zvezno obrestovanje:
-		$$Re ~=~ e^y - 1$$
+		$$Re ~=~ e^Y - 1$$
 	\end{itemize}
 	
 
@@ -102,6 +104,7 @@ $$P ~=~ \sum_{i=1}^{n-1} \frac{C_i}{(1+y)^i} + \frac{C_n + N}{(1+y)^n}$$
 D(0, t) ~&=~ \frac{1}{1 + L(0, t) \cdot t} \\
 D(0, t) ~&=~ e^{-Y_t \cdot t}
 \end{align*}
+Vse inštrumente s fiksnim denarnim tokom lahko vrednostimo po zakonu ene cene.
 
 \end{definicija}
 \vspace{0.5cm}
@@ -117,7 +120,8 @@ $$D(0, t_2) ~=~ D(0, t_1) \cdot D(0, t_1, t_2)$$
 \begin{definicija}[Terminski posel]
 
 Dogovorimo se v času $0$ o ceni finančnega inštrumenta v času $t>0$ (FRA je terminski posel za nekuponske obveznice). Terminska cena (Forward price):
-$$F(t_1) ~=~ \frac{S_0}{D(0, t_1)}$$
+$$S_0 ~=~ F(t_1) \cdot D(0, t_1) ~~~\Longrightarrow~~~ F(t_1) ~=~ \frac{S_0}{D(0, t_1)}$$
+Arbitraža obstaja, ko ta enakost ne velja (\textit{Cash \& carry} ($>$) ter \textit{Inverse cash \& carry} ($<$)).
 
 \end{definicija}
 \vspace{0.5cm}
@@ -129,8 +133,21 @@ $$F_T ~=~ \frac{S_0 \cdot D_{dollar}(0, T)}{D_{euro}(0, T)} ~=~ S_0 \cdot e^{-\l
 \end{vrednost}
 \vspace{0.5cm}
 
-\begin{definicija}[Opcija]
+\begin{definicija}[Zamenjave SWAP]
 
+Pri zamenjavi obrestnih mer tipično dolga stran zamenja tokove s fiksno obrestno mero za denarne tokove s spremenljivo obrestno mero. Obrestna mera $R_{\text{SWAP}}$ je določena tako, da je vrednost zamenjave $V_0$ v čaus $t = 0$ enaka $0$. Neto denarni tok za dolgo pozicijo v času $t_i$ je enak 
+$$N \cdot (t_i - t_{i-1}) \cdot (R(t_{i-1}, t_i) - R_{\text{SWAP}}).$$
+
+V času $t$ je vrednost zamenjave $V_t$ enaka vsoti vrednosti FRA$_i$, za katere $t_i > t$:
+$$V_t ~=~ \sum_{t_i>t} V_t^{\text{FRA}_i} ~=~ N \Delta \sum_{t_i > t} (R(t, t_{i-1}, t_i) - R_{\text{SWAP}}) \cdot D(t, t_i);$$
+za $t=0$ more biti $V_0 = 0$, zato je
+$$R_\text{SWAP} ~=~ \frac{\sum_{i=1}^n R(0, t_{i-1}, t_i) \cdot D(0, t_i)}{\sum_{i=1}^n D(0, t_i)}.$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Opcija]
+~\\
 \begin{itemize}
 	
 	\item Nakupna opcija:
@@ -281,8 +298,8 @@ Trg je \textit{poln}, če je vsaka pogojna terjatev dosegljiva.
 
 \begin{definicija}[Cenovni funkcional]
 
-Denimo, da na našem modelu trga velja \textit{zakon ene cene}. potem lahko definiramo linearni funkcional \hbox{$R_0: \M \rightarrow \R$}, s predpisom 
-$$\Pi_o(x) ~=~ V_0(\vartheta),$$
+Denimo, da na našem modelu trga velja \textit{zakon ene cene}. potem lahko definiramo linearni funkcional \hbox{$\pi_0: \M \rightarrow \R$}, s predpisom 
+$$\pi_o(x) ~=~ V_0(\vartheta),$$
 kjer je $\vartheta$ izvedbeni portfelj za $X$.
 
 \end{definicija}
@@ -343,7 +360,7 @@ $$\E_Q(\tilde{V}_1(\vartheta)) ~=~ \tilde{V}_0(\vartheta).$$
 \end{definicija}
 \vspace{0.5cm}
 
-\begin{izrek}[1. osnovni izrek vrednotenja premoženja]
+\begin{izrek}[1.\,osnovni izrek vrednotenja premoženja]
 
 Naj bo dan enodobni model trga (z vsemi predpostavkami razen neobstoja arbitraže). $A_1$ naj bo \textit{numerar}. Potem je trg brez arbitraže (popoln) natanko tedaj, ko na $\Omega$ obstaja ekvivalentna verjetnost $Q$ taka, da je diskontiran osnovni proces za vsak $A_i$, $1 \leq i \leq N$, \textit{martingal} glede na $Q$.
 $$\tilde{C}_i ~=~ \E_Q(\tilde{S}_i), ~i = 1,\ldots, N ~~~\Longrightarrow~~~ \tilde{V}_0(\vartheta) ~=~ \tilde{V}_1(\vartheta) ~\forall \vartheta.$$
@@ -351,7 +368,7 @@ $$\tilde{C}_i ~=~ \E_Q(\tilde{S}_i), ~i = 1,\ldots, N ~~~\Longrightarrow~~~ \til
 \end{izrek}
 \vspace{0.5cm}
 
-\begin{izrek}[2. osnovni izrek vrednotenja premoženja]
+\begin{izrek}[2.\,osnovni izrek vrednotenja premoženja]
 
 Če je trg \textit{popoln}, torej za dan $A_1$ obstaja ekvivalentna martingalska verjetnost $Q$, je ta enolična natanko tedaj, ko je trg \textit{poln}.
 
@@ -463,9 +480,9 @@ Trg je \textit{popoln} $\Longrightarrow$ velja \textit{zakon ene cene}.
 
 \begin{izrek}
 
-Na trgu ni arbitraže (z dospelostjo $S$) $\iff$ $\Pi_S$ strogo (\hbox{$X_S \in \M_S$}, $X_S \geq 0$ in $X_S \neq 0 ~\Rightarrow~ \Pi_S(X_S) > 0$). 
+Na trgu ni arbitraže (z dospelostjo $S$) $\iff$ $\pi_S$ strogo (\hbox{$X_S \in \M_S$}, $X_S \geq 0$ in $X_S \neq 0 ~\Rightarrow~ \pi_S(X_S) > 0$). 
 
-$$\Pi_S: \M_S \rightarrow \R, ~~~\Pi_S(X_S) ~=~ V_0(\vartheta); ~~~\vartheta ~\text{izvedbena strategija za}~ X_S.$$
+$$\pi_S: \M_S \rightarrow \R, ~~~\pi_S(X_S) ~=~ V_0(\vartheta); ~~~\vartheta ~\text{izvedbena strategija za}~ X_S.$$
 
 \end{izrek}
 \vspace{0.5cm}
@@ -479,7 +496,7 @@ Trg je \textit{poln} za dospelost $T$ $\iff$ poln je za vse ostale dospelosti.
 
 \begin{izrek}
 
-Denimo, da velja \textit{zakon ene cene}. Potem na trgu ni arbitraže $\iff$ cenovni funkcional $\Pi_S$ ima krepko pozitivno rešitev $\tilde{\Pi}_S$ na $\mathcal{L}_S(\Omega)$ (ni enolična, če trg ni \textit{poln}).
+Denimo, da velja \textit{zakon ene cene}. Potem na trgu ni arbitraže $\iff$ cenovni funkcional $\pi_S$ ima krepko pozitivno rešitev $\tilde{\pi}_S$ na $\mathcal{L}_S(\Omega)$ (ni enolična, če trg ni \textit{poln}).
 
 \end{izrek}
 \vspace{0.5cm}
@@ -532,18 +549,97 @@ $Q$ je ekvivalentna martingalska verjetnost $\iff$ diskontirani vrednostni proce
 \end{trditev}
 \vspace{0.5cm}
 
-\begin{izrek}[1. osnovni izrek vrednotenja premoženja]
+\begin{izrek}[1.\,osnovni izrek vrednotenja premoženja]
 
 Obstoj ekvivalentne martingalske verjetnosti pri vsakem numerarju je ekvivalenten pogoju, da je trg brez arbitraže.
 
 \end{izrek}
 \vspace{0.5cm}
 
-\begin{izrek}[2. osnovni izrek vrednotenja premoženja]
+\begin{izrek}[2.\,osnovni izrek vrednotenja premoženja]
 
 Če je trg popoln (torej ne obstaja arbitraža), potem je pri izbranem numerarju ekvivalentna martingalska verjetnost ena sama natanko tedaj, ko je trg poln.
 
 \end{izrek}
+\vspace{0.5cm}
+
+\pagebreak
+
+% #################################################################################################
+
+\section{BINOMSKI MODEL}
+\vspace{0.5cm}
+
+\begin{definicija}[Binomski model]
+
+Imamo $T$ obdobij. Na vsakem koraku imamo dva razvoja: dobrega in slabega; na vsakem koraku je pogojna verjetnost dobrega razvoja $p$, slabega pa $q = 1-p$. 
+$$\Omega ~=~ \{(\omega_1,\ldots, \omega_T \mid \omega_i \in \{d, s\}\}$$
+$\F_k$ je generirana z $2^k$ atomi. Štejemo, kolikokrat je bil razvoj dober do časa $t$:
+\begin{align*}
+D_t ~&=~ \sum_{k=1}^t \1_{\{w_k = d\}}, ~~~1 \leq t \leq T \\
+D_t ~&\sim~ \text{Bin}(t, p) \\
+\1_{\{w_k = d\}} ~&=~ Z_k, ~~~k = 1,\ldots,T \\
+Z_k ~&\sim~ \text{Ber}(p)
+\end{align*}
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}
+
+Ločimo:
+\begin{itemize}
+
+	\item \textit{State dependent}: pogojne terjatve, katerih vrednost v času $t$ je odvisna le od $S_t$ (ne pa od dejanskega razvoja).
+	
+	\item \textit{Path dependent}: pogojne terjatve, ki so v času $t$ odvisne od zgodovine razvoja cenovnega procesa $(S_0, S_1, \ldots, S_t)$.
+
+\end{itemize}
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{definicija}[Časi ustavljanja]
+
+$(\F)_{t=0}^N$ je filtracija na $(\Omega, \F, \p)$. Naj bo $T: \Omega \rightarrow \{0, 1, \ldots, N\}$ slučajna spremenljivka, za katero velja $\{T = k\} \in \F_k$. Velja: $T, S$ časa ustavljanja $\Longrightarrow$ $T \land S = \min\{T, S\}$, $T \lor S = \min\{T, S\}$ časa ustavljanja. \\
+
+\noindent $\tau: \Omega \rightarrow \{0,\ldots, T\} \cup \{\infty\}$ je \textit{čas ustavljanja}, če je
+$$\{\tau = k\} \in \F_k, ~\forall k = 0,\ldots, T ~~~\iff~~~ \{\tau \leq k\} \in \F_k, ~\forall k = 0,\ldots, T$$
+$0 < S < t \leq t$:
+$$\tau_{S, t} ~=~ \{\tau; ~\tau ~\text{je čas ustavljanja,}~ S \leq \tau(\omega) \leq t ~\forall \omega \in \Omega\}$$
+$\sigma$-algebra zgodovine $\tau$:
+$$\F_\tau ~=~ \{A \in \F; ~A \cap \{T=k\} \in \F_k, ~\forall k = 0,\ldots, T\}.$$
+
+\end{definicija}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Naj bo $(X_n)_{n=0}^T$ prilagojen proces $(\F_n)_{n=0}^T$, $\tau$ je čas ustavljanja glede na $\F_n$. Ustavljeni proces $(X_{n \land \tau})_{n=0}^T$ je tudi prilagojen, torej je $X_{n \land \tau}$ $\F_n$-merljiva, $n = 0, \ldots, T$.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Naj bo $(X_n)_{n=0}^T$ martingal. Potem je $(X_{n \land \tau})_{n=0}^T$ tudi martingal. Enako velja za submartingale in supermartingale.
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{trditev}
+
+Za dva prilagojena procesa $(X_n)_{n=0}^T$, $(Y_n)_{n=0}^T$ rečemo, da $Y$ dominira $X$, če velja $Y_n(\omega) \geq X_n(\omega)$, $\forall n = 0, \ldots, T$, $\forall \omega \in \Omega$. Če $Y$ dominira $X$, potem $Y_{n \land \tau}$ dominira $X_{n \land \tau}$ $\forall \tau$ (čas ustavljanja).
+
+\end{trditev}
+\vspace{0.5cm}
+
+\begin{definicija}[Smellova ovojnica in Bellmanov algoritem]
+
+$(V_0, V_1, \ldots, V_T)$ je prilagojen proces. Včasu $T-1$ se odločamo: se bolj splača nadaljevati ali ustaviti? $\E(V_T \mid \F_{T-1})$ in $V_{T-1}$ sta merljivi glede na $\F_{T-1}$:
+$$U_{T-1} ~=~ \max\{V_{T-1}, \E(V_t \mid \F_{T-1}\}.$$
+
+\end{definicija}
 \vspace{0.5cm}
 
 \pagebreak
